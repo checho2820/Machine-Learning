@@ -11,6 +11,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC 
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import linear_model
+
 url = 'diabetes.csv'
 data = pd.read_csv(url)
 
@@ -46,7 +49,7 @@ data_test = data[385:]
 x = np.array(data_train.drop(['Outcome'], 1))
 y = np.array(data_train.Outcome) #0 no tiene diabetes, 1 si tiene diabetes
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
 
 x_test_out = np.array(data_test.drop(['Outcome'], 1))
 y_test_out = np.array(data_test.Outcome)
@@ -78,7 +81,7 @@ print(f'acucuracy de validación: {logreg.score(x_test_out, y_test_out)}')
 
 
 #Seleccionar un modelo
-svc = SVC(gamma='auto')
+svc = SVC(kernel='rbf') #Se utiliza el núcleo rbf/gaussiano para adaptarse al modelo.
 
 #Entreno el modelo
 svc.fit(x_train, y_train)
@@ -102,7 +105,7 @@ print(f'acucuracy de validación: {svc.score(x_test_out, y_test_out)}')
 
 
 #Seleccionar un modelo
-arbol = DecisionTreeClassifier()
+arbol = DecisionTreeClassifier(max_depth=2, random_state=42)# Se usa un árbol de profundidad 2 para que no haya overfitting
 
 #Entreno el modelo
 arbol.fit(x_train, y_train)
@@ -122,4 +125,50 @@ print(f'acucuracy de validación: {arbol.score(x_test_out, y_test_out)}')
 
 
 
+#Random Forest Classifier
 
+
+#Seleccionar un modelo
+clf = RandomForestClassifier(max_depth=2, random_state=0)
+
+#Entreno el modelo
+clf.fit(x_train, y_train)
+
+#Métricas
+print('*'*50)
+print('Random Forest Classifier')
+
+#Accuracy de entrenamiento de entrenamiento
+print(f'accuracy de entrenamiento de entrenamiento: {clf.score(x_train, y_train)}')
+
+# Accuracy de test de entrenamiento
+print(f'accuracy de test de entrenamiento: {clf.score(x_test, y_test)}')
+
+#Accuracy de validacion
+print(f'acucuracy de validación: {clf.score(x_test_out, y_test_out)}')
+
+
+#Regresión lineal
+
+
+#Seleccionar un modelo
+regr = linear_model.LinearRegression()
+
+#Entreno el modelo
+regr.fit(x_train, y_train)
+
+#Métricas
+print('*'*50)
+print('Regresión lineal')
+
+#Accuracy de entrenamiento de entrenamiento
+print(f'accuracy de entrenamiento de entrenamiento: {regr.score(x_train, y_train)}')
+
+# Accuracy de test de entrenamiento
+print(f'accuracy de test de entrenamiento: {regr.score(x_test, y_test)}')
+
+#Accuracy de validacion
+print(f'acucuracy de validación: {regr.score(x_test_out, y_test_out)}')
+
+
+ 
