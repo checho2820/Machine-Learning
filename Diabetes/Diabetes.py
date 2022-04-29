@@ -8,7 +8,9 @@ import numpy as np
 import pandas as pd
 from warnings import simplefilter
 from sklearn.model_selection import train_test_split 
-
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC 
+from sklearn.tree import DecisionTreeClassifier
 url = 'diabetes.csv'
 data = pd.read_csv(url)
 
@@ -41,4 +43,83 @@ data.BMI.replace(0, 32, inplace=True)
 data_train = data[:385]
 data_test = data[385:]
 
-x = np.array()
+x = np.array(data_train.drop(['Outcome'], 1))
+y = np.array(data_train.Outcome) #0 no tiene diabetes, 1 si tiene diabetes
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+
+x_test_out = np.array(data_test.drop(['Outcome'], 1))
+y_test_out = np.array(data_test.Outcome)
+#Regresión logística
+
+#Seleccionar un modelo
+logreg = LogisticRegression(solver='lbfgs', max_iter = 7600)
+
+#Entreno el modelo
+logreg.fit(x_train, y_train)
+
+#Métricas
+print('*'*50)
+print('Regresión logística')
+
+#Accuracy de entrenamiento de entrenamiento
+print(f'accuracy de entrenamiento de entrenamiento: {logreg.score(x_train, y_train)}')
+
+# Accuracy de test de entrenamiento
+print(f'accuracy de test de entrenamiento: {logreg.score(x_test, y_test)}')
+
+#Accuracy de validacion
+print(f'acucuracy de validación: {logreg.score(x_test_out, y_test_out)}')
+
+
+
+
+#Maquina de soporte vectorial
+
+
+#Seleccionar un modelo
+svc = SVC(gamma='auto')
+
+#Entreno el modelo
+svc.fit(x_train, y_train)
+
+#Métricas
+print('*'*50)
+print('Máquina de soporte vectorial')
+
+#Accuracy de entrenamiento de entrenamiento
+print(f'accuracy de entrenamiento de entrenamiento: {svc.score(x_train, y_train)}')
+
+# Accuracy de test de entrenamiento
+print(f'accuracy de test de entrenamiento: {svc.score(x_test, y_test)}')
+
+#Accuracy de validacion
+print(f'acucuracy de validación: {svc.score(x_test_out, y_test_out)}')
+
+
+
+#Árbol de decisión 
+
+
+#Seleccionar un modelo
+arbol = DecisionTreeClassifier()
+
+#Entreno el modelo
+arbol.fit(x_train, y_train)
+
+#Métricas
+print('*'*50)
+print('Árbol de desición')
+
+#Accuracy de entrenamiento de entrenamiento
+print(f'accuracy de entrenamiento de entrenamiento: {arbol.score(x_train, y_train)}')
+
+# Accuracy de test de entrenamiento
+print(f'accuracy de test de entrenamiento: {arbol.score(x_test, y_test)}')
+
+#Accuracy de validacion
+print(f'acucuracy de validación: {arbol.score(x_test_out, y_test_out)}')
+
+
+
+
